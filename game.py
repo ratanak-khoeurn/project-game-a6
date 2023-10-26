@@ -210,3 +210,52 @@ def start_game():
 
     scroll_background()
     level_window.mainloop()
+#=============background_game_image================
+background_game_image = Image.open('images/sunrise.png')
+bg_img = ImageTk.PhotoImage(background_game_image)
+
+#=============player_image================
+player_image = Image.open("./images/army.png")
+player_image = player_image.resize((70, 70))
+player_image = ImageTk.PhotoImage(player_image)
+
+#=============wall_image================
+wall_image = Image.open("./images/walls.png")
+wall_image = wall_image.resize((250, 50))
+wall_image = ImageTk.PhotoImage(wall_image)
+
+#=============background_start_image================
+bg_image = Image.open('./images/shooter.png')
+bg_image = bg_image.resize((1400, 700))
+background_login = ImageTk.PhotoImage(bg_image)
+canvas.create_image(0, 0, image=background_login, anchor=NW)
+
+
+#=============Button_help================
+help_button = Button(canvas, text='HELP!', width=10, height=-15, bg='dark red', font=('DRIPINK PERSONAL USE Black', 30), border=5, cursor="spider", command=help_window)
+help_button.pack()
+help_button.place(x=100, y=400)
+
+
+
+#=============Button_start================
+start_game_button = Button(canvas, text='START GAME', width=10, height=-15, bg='dark red', font=('DRIPINK PERSONAL USE Black', 30), border=5, cursor="spider", command=start_game)
+start_game_button.pack()
+start_game_button.place(x=420, y=400)
+
+#=============Button_exit================
+exit_button = Button(canvas, text='EXIT!', width=10, height=-15, bg='dark red', font=('DRIPINK PERSONAL USE Black', 30), border=5, cursor="spider", command=window.quit)
+exit_button.pack()
+exit_button.place(x=730, y=400)
+
+#=============Button_story================
+def story_button():
+    story_game_button = Button(canvas, text='STORY GAME', width=10, height=-15, bg='darkred', font=('DRIPINK PERSONAL USE Black', 30), border=5, cursor="spider", command=story_animation)
+    story_game_button.pack()
+    story_game_button.place(x=1050, y=400)
+
+story_button()
+
+sound_thread = threading.Thread(target=play_sound)
+sound_thread.start()
+window.mainloop()
