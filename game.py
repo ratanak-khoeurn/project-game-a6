@@ -42,3 +42,22 @@ frame.pack()
 
 canvas = tk.Canvas(frame, width=2000, height=1000)
 canvas.pack()
+
+#=============play sound on help window================
+def help_window():
+    winsound.PlaySound("./sounds/play_game.wav", winsound.SND_FILENAME | winsound.SND_LOOP | winsound.SND_ASYNC)
+
+    help_window = tk.Toplevel(window)
+    help_frame = tk.Frame(help_window, width=help_window.winfo_screenwidth(), height=help_window.winfo_screenheight())
+    help_frame.pack()
+    help_canvas = tk.Canvas(help_frame, width=help_window.winfo_screenwidth(), height=help_window.winfo_screenheight())
+    help_canvas.pack()
+    help_image = Image.open('images/rules.png')
+    help_image = help_image.resize((help_window.winfo_screenwidth(), help_window.winfo_screenheight()))
+    help_background = ImageTk.PhotoImage(help_image)
+    help_canvas.create_image(0, 0, image=help_background, anchor=NW)
+
+#=============create button back on help window================
+    button_back = Button(help_frame, text='Back', width=10, height=2, bg='dark red', font=('DRIPINK PERSONAL USE Black', 12), border=5, command=help_window.destroy)
+    button_back.place(x=80, y=600)
+    help_canvas.image = help_background
