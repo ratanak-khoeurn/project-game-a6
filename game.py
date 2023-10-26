@@ -88,3 +88,125 @@ def story_animation():
     button_back = Button(story, text="Back", width=10, height=2, bg="dark red", font=("GOLDROPS PERSONAL USE", 12), border=5, command=close_story)
     button_back.pack()
     button_back.place(x=650, y=680)
+#=============start game================
+def start_game():
+    level_window = tk.Toplevel(window)
+    level_window.title("🐱‍👤 START GAME 🐱‍👤")
+    level_window.geometry("2000x900")
+
+    canvas = tk.Canvas(level_window, width=1920, height=1080)
+    canvas.pack()
+
+    image = Image.open("./images/sunrise.png")
+    background_image = ImageTk.PhotoImage(image)
+    background = canvas.create_image(0, 0, anchor="nw", image=background_image)
+    scroll_speed = 1
+    scroll_direction = "right"
+
+    
+#=============back ground animation================
+    def scroll_background():
+        if scroll_direction == "right":
+            canvas.move(background, -scroll_speed, 0)
+            if canvas.coords(background)[0]<=-image.width:
+                canvas.move(background, image.width, 0)
+        elif scroll_direction == "left":
+            canvas.move(background, scroll_speed, 0)
+            if canvas.coords(background)[0] >= 0:
+                canvas.move(background, -image.width, 0)
+        window.after(10, scroll_background)
+
+#=============create army image================
+    player_image = Image.open("./images/army.png")
+    player_image = player_image.resize((70, 70))
+    player_image = ImageTk.PhotoImage(player_image)
+
+#=============create walls================
+    player = canvas.create_image(110, 110, anchor="nw", image=player_image)
+    wall_image = Image.open("./images/walls.png")
+    wall_image = wall_image.resize((250, 50))
+    wall_image = ImageTk.PhotoImage(wall_image)
+    wall_coords = [
+        (0, 600),
+        (230, 360),
+        (100, 250),
+        (20, 600),
+        (400, 560),
+        (500, 460),
+        (600, 400),
+        (600, 180),
+        (600, 180),
+        (1000, 460), 
+        (700, 260),
+        (1000, 160),
+        (600, 90),
+        (800, 600)
+    ]
+
+    for x, y in wall_coords:
+        canvas.create_image(x, y, anchor="nw", image=wall_image, tags="wall")
+
+    keyPressed = []
+    SPEED = 7
+    TIME = 10
+    GRAVITY_FORCE = 5
+    
+#=============check player movement================
+    def check_movement(dx=0, dy=0):
+        player_coords = canvas.coords(player)
+        new_x1 = player_coords[0] + dx
+        new_y1 = player_coords[1] + dy
+        new_x2 = player_coords[0] + dx-20 + player_image.width()
+        new_y2 = player_coords[1] + dy-20 + player_image.height()
+        overlapping_objects = canvas.find_overlapping(new_x1, new_y1, new_x2, new_y2)
+        for wall_id in canvas.find_withtag("wall"):
+            if wall_id in overlapping_objects:
+                return False
+
+        return True
+
+#=============start movement================
+    def start_move(event):
+        if event.keysym not in keyPressed:
+            keyPressed.append(event.keysym)
+            if len(keyPressed) == 1:
+                move()
+
+#=============jump================
+    def jump(force):
+        if force > 0:
+            if check_movement(0, -force):
+                canvas.move(player, 0,-force)
+                window.after(TIME,jump,force-1)
+
+    def move():
+        if not keyPressed == []:
+            x = 0
+            if "Left" in keyPressed:
+                x = -SPEED
+            if "Right" in keyPressed:
+                x = SPEED
+        if check_movement(x, 0):
+            canvas.move(player, x, 0)
+        if "space" in keyPressed and not check_movement(0, GRAVITY_FORCE):
+            jump(20)
+        level_window.after(TIME, move)
+
+#=============stop movement================
+    def stop_move(event):
+        global keyPressed
+        if event.keysym in keyPressed:
+            keyPressed.remove(event.keysym)
+
+#=============gravity================
+    def gravity():
+        if check_movement(0, GRAVITY_FORCE):
+            canvas.move(player, 0, GRAVITY_FORCE)
+        level_window.after(TIME, gravity)
+
+    gravity()
+    level_window.bind("<Key>", start_move)
+    level_window.bind("<KeyRelease>", stop_move)
+
+    scroll_background()
+    level_window.mainloop()
