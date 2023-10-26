@@ -61,3 +61,30 @@ def help_window():
     button_back = Button(help_frame, text='Back', width=10, height=2, bg='dark red', font=('DRIPINK PERSONAL USE Black', 12), border=5, command=help_window.destroy)
     button_back.place(x=80, y=600)
     help_canvas.image = help_background
+#=============play sound on story animation and play sound================
+def story_animation():
+#=============close story window ================
+    def close_story():
+        story.destroy()
+    winsound.PlaySound("./sounds/history.wav", winsound.SND_FILENAME | winsound.SND_LOOP | winsound.SND_ASYNC)
+    
+    story_text = " 😱 THE ARMY HISTORY 😱 \n He was a soldier loyal to the motherland and \n defended the motherland from aggression. His name \n is Ratanak and he also has two other friends  who are \n loyal to the motherland. But now they are dead, their are \n ☠☠☠ Sok Heang and Channy ☠☠☠ \n ----------✨✨✨✨----------"
+    
+#=============animation text ================
+    def animate_text(label, text, index=0, delay=80):
+        if index < len(text):
+            label.config(text=text[:index+1])
+            label.after(delay, animate_text, label, text, index+1, delay)
+    
+    story = Toplevel(window)
+    story.attributes("-fullscreen", True)
+    story.attributes("-alpha", 0.9)
+    story.attributes("-topmost", True)
+    story_label = Label(story, font=("GOLDROPS PERSONAL USE", 36), bg="black", fg="white")
+    story_label.pack(fill=BOTH, expand=True)
+    animate_text(story_label, story_text)
+    
+#=============create button back================
+    button_back = Button(story, text="Back", width=10, height=2, bg="dark red", font=("GOLDROPS PERSONAL USE", 12), border=5, command=close_story)
+    button_back.pack()
+    button_back.place(x=650, y=680)
