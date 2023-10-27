@@ -100,7 +100,7 @@ def start_game():
     image = Image.open("./images/sunrise.png")
     background_image = ImageTk.PhotoImage(image)
     background = canvas.create_image(0, 0, anchor="nw", image=background_image)
-    scroll_speed = 1
+    scroll_speed = 0.3
     scroll_direction = "right"
 
     
